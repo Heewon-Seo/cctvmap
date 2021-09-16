@@ -8,6 +8,7 @@ const cctvInfo = [
 
 let list = [];
 
+/*
 for (let index in cctvInfo) {
     const request = new XMLHttpRequest();
     request.open("GET", cctvInfo[index]);
@@ -76,6 +77,7 @@ for (let index in cctvInfo) {
 
     //console.log(list);
 }
+ */
 
 // ADDR: "서울특별시 중랑구 상봉동 봉화산로44길 16 풍산쉐르빌"
 // CCTVUSE: "방범"
@@ -91,7 +93,7 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
         center: new kakao.maps.LatLng(37.602020, 127.08804), // 지도의 중심좌표
         level: 3 // 지도의 확대 레벨
     };
-console.log('hello');
+// console.log('hello');
 var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
 
 var positions = [];
@@ -101,8 +103,8 @@ var imageSrc = "pin.png";
 
 select = () => {
     const tds = document.querySelectorAll('.cell100');
-    console.log(tds.length);
-    tds.forEach((currentValue, index,array) => {
+    // console.log(tds.length);
+    tds.forEach((currentValue) => {
         currentValue.addEventListener('click',()=>{
             //console.log(currentValue.innerHTML, index, array);
             //console.log('click');
@@ -111,7 +113,7 @@ select = () => {
             for (let index = 0; index < list.length ; index++) {
                 if (list[index].add===currentValue.innerHTML) {
                     x = list[index].x;
-                    console.log(x);
+                    //console.log(x);
                     y = list[index].y;
                     break;
                 }
@@ -124,7 +126,78 @@ select = () => {
             map.panTo(moveLatLon);
         });
     });
+
 }
+$(function () {
+    $('#btn').click(function () {
+        let link = "http://openapi.seoul.go.kr:8088/70784a446a6368693436666c586d44/json/safeOpenCCTV/1/50";
+        let gu = $('#search').val();
+        let api = link+"/"+gu;
+
+        $.getJSON(api,function (data){
+            let datas = data.safeOpenCCTV.row;
+            console.log(datas);
+            // $('#datas').empty();
+            const table = $('tbody');
+            table.empty();
+            let mapX = 0;
+            let mapY = 0;
+            $.each(datas,function (index, obj) {
+                let x = parseFloat(obj.WGSXPT);
+                mapX = x;
+                let y = parseFloat(obj.WGSYPT);
+                mapY = y;
+                let use = obj.CCTVUSE;
+                let address = obj.ADDR;
+                let quantity = obj.QTY;
+                let gu = obj.SVCAREAID;
+                console.log(obj.ADDR);
+                table.append("<tr class='"+gu+"' id='active'>" +
+                    "<th class=\"cell100\">"+address+"</th><td>"+quantity+"대</td><td>"+use+"</td></tr>");
+
+                positions.push({
+                    title: `${use} CCTV`,
+                    latlng: new kakao.maps.LatLng(x, y)
+                });
+
+                list.push({
+                    x: x,
+                    y: y,
+                    add: address
+                });
+
+                for (var i = 0; i < positions.length; i++) {
+
+                    // 마커 이미지의 이미지 크기 입니다
+                    var imageSize = new kakao.maps.Size(30, 30);
+
+                    // 마커 이미지를 생성합니다
+                    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
+                    // 마커를 생성합니다
+                    var marker = new kakao.maps.Marker({
+                        map: map, // 마커를 표시할 지도
+                        position: positions[i].latlng, // 마커를 표시할 위치
+                        title: positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+                        image: markerImage // 마커 이미지
+                    });
+                    //console.log(marker);
+
+                    marker.setMap(map);
+                }
+
+                select();
+                selectGu();
+            });
+            // 이동할 위도 경도 위치를 생성합니다
+            var moveLatLon = new kakao.maps.LatLng(mapX, mapY);
+            console.log(moveLatLon);
+
+            // 지도 중심을 이동 시킵니다
+            map.panTo(moveLatLon);
+        });
+    });
+})
 
 selectGu = () => {
     const tables = document.querySelectorAll('tbody tr');
@@ -143,4 +216,6 @@ selectGu = () => {
         })
     })
 }
+
+
 

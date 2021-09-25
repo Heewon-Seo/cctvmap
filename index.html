@@ -12,7 +12,7 @@
     <div class="container">
         <div class="title">
         <h1 class="text-white">서울 안심 지도</h1>
-            <div class="mark"><mark>주소를 눌러 실제 위치를 확인해 보세요!</mark></div>
+<!--            <div class="mark"><mark>주소를 눌러 실제 위치를 확인해 보세요!</mark></div>-->
             <div class="dropdown">
 <!--                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">-->
 <!--                구별 보기-->
@@ -28,8 +28,12 @@
         </div>
         </div>
         <div class="map_wrap">
-            <div id="map"></div>
+            <div id="map">추가</div>
         </div>
+        <div id="title">
+            동 별 CCTV 대수
+        </div>
+        <div id="piechart" style="width: 50%; height: 80%;"></div>
     </div>
 </header>
 
@@ -46,6 +50,9 @@
             </tbody>
         </table>
 </section>
+
+
+
 </body>
 <!--<script src="js/bootstrap.js"></script>-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -53,5 +60,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js" integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>
 <script
         src="//dapi.kakao.com/v2/maps/sdk.js?appkey=92e1522c98317cc35ea563f44eb1d098&libraries=services,clusterer"></script>
-<script src="js/main.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="js/main.js?ver=1"></script>
 </html>
